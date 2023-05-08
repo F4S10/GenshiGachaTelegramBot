@@ -316,7 +316,7 @@ async def gacha(message : Message):
         newBonus = bonus - 1
         cur.execute("UPDATE texnical SET bonus = ? WHERE user_id = ?", (newBonus, user_id))
     else:
-        await message.answer("Сегодня вы потратили все свои крутки на сегодня")
+        await message.answer("Сегодня вы потратили все свои крутки")
     base.commit()
 
 @dp.message_handler(commands=["history"])
