@@ -8,7 +8,7 @@ from datetime import datetime
 import random
 
 #токен
-TOKEN_API = '6031321471:AAEtFS3tXBtB53CsZE5LPuPV4UET6Rkhbh8'
+TOKEN_API = ''
 
 bot = Bot(TOKEN_API)
 dp = Dispatcher(bot)
