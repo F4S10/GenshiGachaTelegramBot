@@ -126,6 +126,7 @@ async def inventory(message : Message):
 @dp.message_handler(commands=["gacha"])
 async def gacha(message : Message):
     user_id = message.from_user.id
+    bonus = cur.execute("SELECT bonus FROM texnical WHERE user_id = ?", (user_id,))
     common = [1,2,3,4,6,7,8,9,11,12,13,14,16,17,18,19,21,22,23,24,26,27,28,29,31,32,33,34,36,37,38,39,41,42,43,44,46,47,48,49,51,52,53,54,56,57,58,59,61,62,63,64,66,67,68,69,71,72,73,74,76,77,78,79,81,82,83,84,86,87,87,88,89]
     commonDrop = ["Меч небесного всадника", "Филейный нож", "Меч путешественника", "Предвестник зари", "Холодное лезвие", "Лук ворона", "Посыльный", "Клятва стрелка", "Рогатка", "Изогнутый лук", "Чёрная кисть", "Алебарда Миллелита", "Парный нефрит", "Эпос о драконоборцах", "Руководство по магии", "Изумрудный шар", "Меч драконьей крови", "Металлическая тень", "Меч из белого железа", "Дубина переговоров"]
     TcommonDrop = ["Меч_небесного_всадника", "Филейный_нож", "Меч_путешественника", "Предвестник_зари", "Холодное_лезвие", "Лук_ворона", "Посыльный", "Клятва_стрелка", "Рогатка", "Изогнутый_лук", "Чёрная_кисть", "Алебарда_Миллелита", "Парный_нефрит", "Эпос_о_драконоборцах", "Руководство_по_магии", "Изумрудный_шар", "Меч_драконьей_крови", "Металлическая_тень", "Меч_из_белого_железа", "Дубина_переговоров"]
@@ -137,85 +138,120 @@ async def gacha(message : Message):
     TlegendaryDrop = ["Бай_Чжу", "Дэхья", "Аль_Хайтам", "Странник", "Нахида", "Нилу", "Сайно", "Тигнари", "Е_Лань", "Аято", "Яэ_Мико", "Шень_Хэ", "Итто", "Кокоми", "Райден", "Ёимия", "Аяка", "Кадзуха ", "Эола", "Ху_Тао", "Сяо", "Гань_Юй", "Альбедо", "Чжун_Ли", "Тарталья", "Кли", "Венти", "Ци_Ци", "Мона", "Ке_Цин", "Дилюк", "Джинн", "Драгоценный_омут", "Кромсатель_пиков", "Небесный_меч", "Меч_сокола", "Клятва_свободы", "Рассекающий_туман", "Харан_гэппаку_фуцу", "Ключ_Хадж_нисут", "Свет_лиственного_разреза", "Лук_Амоса", "Небесное_крыло", "Элегия_погибели", "Громовой_пульс", "Полярная_звезда", "Аква_симулякрум", "Охотничья_тропа", "Посох_Хомы", "Нефритовый_коршун", "Небесная_ось", "Покоритель_вихря", "Сияющая_жатва", "Усмиритель_бед", "Посох_алых_песков", "Память_о_пыли", "Небесный_атлас", "Молитва_святых_ветрам", "Вечное_лунное_сияние", "Истина_кагура", "Сновидения_тысячи_ночей", "Воспоминания_Тулайтуллы", "Великолепие_лазурного_свода", "Некованый", "Волчья_погибель", "Небесное_величие", "Песнь_разбитых_сосен", "Краснорогий_камнеруб", "Маяк _тростникового_моря"]
     garant = cur.execute("SELECT garant FROM gacha WHERE user_id = ?", (user_id,)).fetchone()
     epic_garant = cur.execute("SELECT epic_garant FROM gacha WHERE user_id = ?", (user_id,)).fetchone()
-    rare = random.randint(1,90)
-    if garant[0] < 90:
-        if epic_garant[0] < 10:
-            if rare in common:
-                leniv = len(commonDrop)
-                lenivo = leniv - 1
-                pis = random.randint(0, lenivo)
-                upGarant = garant[0] + 1
-                upEpic_garant = epic_garant[0] + 1
-                cur.execute("UPDATE gacha SET garant = ? WHERE user_id = ?", (upGarant, user_id))
-                cur.execute("UPDATE gacha SET epic_garant = ? WHERE user_id = ?", (upEpic_garant, user_id))
-                drop = commonDrop[pis]
-                TDrop = TcommonDrop[pis]
-                one = drop
-                two = cur.execute("SELECT one FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                tree = cur.execute("SELECT two FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                four = cur.execute("SELECT tree FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                five = cur.execute("SELECT four FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                six = cur.execute("SELECT five FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                seven = cur.execute("SELECT six FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                eight = cur.execute("SELECT seven FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                nine = cur.execute("SELECT eight FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                ten = cur.execute("SELECT nine FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                dropCount = cur.execute(f"SELECT {TDrop} FROM inv WHERE user_id = ?", (user_id,)).fetchone()
-                newDropCount = dropCount[0] + 1
-                cur.execute(f"UPDATE inv SET {TDrop} = ? WHERE user_id = ?", (newDropCount, user_id))
-                cur.execute("UPDATE history SET one = ? WHERE user_id = ?", (one, user_id))
-                cur.execute("UPDATE history SET two = ? WHERE user_id = ?", (two[0], user_id))
-                cur.execute("UPDATE history SET tree = ? WHERE user_id = ?", (tree[0], user_id))
-                cur.execute("UPDATE history SET four = ? WHERE user_id = ?", (four[0], user_id))
-                cur.execute("UPDATE history SET five = ? WHERE user_id = ?", (five[0], user_id))
-                cur.execute("UPDATE history SET six = ? WHERE user_id = ?", (six[0], user_id))
-                cur.execute("UPDATE history SET seven = ? WHERE user_id = ?", (seven[0], user_id))
-                cur.execute("UPDATE history SET eight = ? WHERE user_id = ?", (eight[0], user_id))
-                cur.execute("UPDATE history SET nine = ? WHERE user_id = ?", (nine[0], user_id))
-                cur.execute("UPDATE history SET ten = ? WHERE user_id = ?", (ten[0], user_id))
-                await message.answer(f"Вам выпал \"{drop}\"")
-            if rare in epic:
+    if bonus in [1,2]:
+        rare = random.randint(1,90)
+        if garant[0] < 90:
+            if epic_garant[0] < 10:
+                if rare in common:
+                    leniv = len(commonDrop)
+                    lenivo = leniv - 1
+                    pis = random.randint(0, lenivo)
+                    upGarant = garant[0] + 1
+                    upEpic_garant = epic_garant[0] + 1
+                    cur.execute("UPDATE gacha SET garant = ? WHERE user_id = ?", (upGarant, user_id))
+                    cur.execute("UPDATE gacha SET epic_garant = ? WHERE user_id = ?", (upEpic_garant, user_id))
+                    drop = commonDrop[pis]
+                    TDrop = TcommonDrop[pis]
+                    one = drop
+                    two = cur.execute("SELECT one FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    tree = cur.execute("SELECT two FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    four = cur.execute("SELECT tree FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    five = cur.execute("SELECT four FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    six = cur.execute("SELECT five FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    seven = cur.execute("SELECT six FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    eight = cur.execute("SELECT seven FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    nine = cur.execute("SELECT eight FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    ten = cur.execute("SELECT nine FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    dropCount = cur.execute(f"SELECT {TDrop} FROM inv WHERE user_id = ?", (user_id,)).fetchone()
+                    newDropCount = dropCount[0] + 1
+                    cur.execute(f"UPDATE inv SET {TDrop} = ? WHERE user_id = ?", (newDropCount, user_id))
+                    cur.execute("UPDATE history SET one = ? WHERE user_id = ?", (one, user_id))
+                    cur.execute("UPDATE history SET two = ? WHERE user_id = ?", (two[0], user_id))
+                    cur.execute("UPDATE history SET tree = ? WHERE user_id = ?", (tree[0], user_id))
+                    cur.execute("UPDATE history SET four = ? WHERE user_id = ?", (four[0], user_id))
+                    cur.execute("UPDATE history SET five = ? WHERE user_id = ?", (five[0], user_id))
+                    cur.execute("UPDATE history SET six = ? WHERE user_id = ?", (six[0], user_id))
+                    cur.execute("UPDATE history SET seven = ? WHERE user_id = ?", (seven[0], user_id))
+                    cur.execute("UPDATE history SET eight = ? WHERE user_id = ?", (eight[0], user_id))
+                    cur.execute("UPDATE history SET nine = ? WHERE user_id = ?", (nine[0], user_id))
+                    cur.execute("UPDATE history SET ten = ? WHERE user_id = ?", (ten[0], user_id))
+                    await message.answer(f"Вам выпал \"{drop}\"")
+                if rare in epic:
+                    leniv = len(epicDrop)
+                    lenivo = leniv - 1
+                    pis = random.randint(0, lenivo)
+                    print(lenivo)
+                    drop = epicDrop[pis]
+                    TDrop = TepicDrop[pis]
+                    one = drop
+                    two = cur.execute("SELECT one FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    tree = cur.execute("SELECT two FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    four = cur.execute("SELECT tree FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    five = cur.execute("SELECT four FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    six = cur.execute("SELECT five FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    seven = cur.execute("SELECT six FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    eight = cur.execute("SELECT seven FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    nine = cur.execute("SELECT eight FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    ten = cur.execute("SELECT nine FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    dropCount = cur.execute(f"SELECT {TDrop} FROM inv WHERE user_id = ?", (user_id,)).fetchone()
+                    newDropCount = dropCount[0] + 1
+                    cur.execute(f"UPDATE inv SET {TDrop} = ? WHERE user_id = ?", (newDropCount, user_id))
+                    cur.execute("UPDATE history SET one = ? WHERE user_id = ?", (one, user_id))
+                    cur.execute("UPDATE history SET two = ? WHERE user_id = ?", (two[0], user_id))
+                    cur.execute("UPDATE history SET tree = ? WHERE user_id = ?", (tree[0], user_id))
+                    cur.execute("UPDATE history SET four = ? WHERE user_id = ?", (four[0], user_id))
+                    cur.execute("UPDATE history SET five = ? WHERE user_id = ?", (five[0], user_id))
+                    cur.execute("UPDATE history SET six = ? WHERE user_id = ?", (six[0], user_id))
+                    cur.execute("UPDATE history SET seven = ? WHERE user_id = ?", (seven[0], user_id))
+                    cur.execute("UPDATE history SET eight = ? WHERE user_id = ?", (eight[0], user_id))
+                    cur.execute("UPDATE history SET nine = ? WHERE user_id = ?", (nine[0], user_id))
+                    cur.execute("UPDATE history SET ten = ? WHERE user_id = ?", (ten[0], user_id))
+                    upGarant = garant[0] + 1
+                    upEpic_garant = epic_garant[0] - epic_garant[0]
+                    cur.execute("UPDATE gacha SET garant = ? WHERE user_id = ?", (upGarant, user_id))
+                    cur.execute("UPDATE gacha SET epic_garant = ? WHERE user_id = ?", (upEpic_garant, user_id))
+                    await message.answer(f"Вам вапал \"{drop}\"")
+                if rare in legendary:
+                    leniv = len(legendaryDrop)
+                    lenivo = leniv - 1
+                    pis = random.randint(0, lenivo)
+                    drop = legendaryDrop[pis]
+                    TDrop = TlegendaryDrop[pis]
+                    one = TDrop
+                    two = cur.execute("SELECT one FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    tree = cur.execute("SELECT two FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    four = cur.execute("SELECT tree FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    five = cur.execute("SELECT four FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    six = cur.execute("SELECT five FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    seven = cur.execute("SELECT six FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    eight = cur.execute("SELECT seven FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    nine = cur.execute("SELECT eight FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    ten = cur.execute("SELECT nine FROM history WHERE user_id = ?", (user_id,)).fetchone()
+                    dropCount = cur.execute(f"SELECT {drop} FROM inv WHERE user_id = ?", (user_id,)).fetchone()
+                    newDropCount = dropCount[0] + 1
+                    cur.execute(f"UPDATE inv SET {TDrop} = ? WHERE user_id = ?", (newDropCount, user_id))
+                    cur.execute("UPDATE history SET one = ? WHERE user_id = ?", (one, user_id))
+                    cur.execute("UPDATE history SET two = ? WHERE user_id = ?", (two[0], user_id))
+                    cur.execute("UPDATE history SET tree = ? WHERE user_id = ?", (tree[0], user_id))
+                    cur.execute("UPDATE history SET four = ? WHERE user_id = ?", (four[0], user_id))
+                    cur.execute("UPDATE history SET five = ? WHERE user_id = ?", (five[0], user_id))
+                    cur.execute("UPDATE history SET six = ? WHERE user_id = ?", (six[0], user_id))
+                    cur.execute("UPDATE history SET seven = ? WHERE user_id = ?", (seven[0], user_id))
+                    cur.execute("UPDATE history SET eight = ? WHERE user_id = ?", (eight[0], user_id))
+                    cur.execute("UPDATE history SET nine = ? WHERE user_id = ?", (nine[0], user_id))
+                    cur.execute("UPDATE history SET ten = ? WHERE user_id = ?", (ten[0], user_id))
+                    upGarant = garant[0] - garant[0]
+                    upEpic_garant = epic_garant[0] + 1
+                    cur.execute("UPDATE gacha SET garant = ? WHERE user_id = ?", (upGarant, user_id))
+                    cur.execute("UPDATE gacha SET epic_garant = ? WHERE user_id = ?", (upEpic_garant, user_id))
+                    await message.answer(f"Вам вапал \"{drop}\"")
+            elif epic_garant[0] == 10:
                 leniv = len(epicDrop)
                 lenivo = leniv - 1
                 pis = random.randint(0, lenivo)
-                print(lenivo)
                 drop = epicDrop[pis]
                 TDrop = TepicDrop[pis]
                 one = drop
-                two = cur.execute("SELECT one FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                tree = cur.execute("SELECT two FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                four = cur.execute("SELECT tree FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                five = cur.execute("SELECT four FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                six = cur.execute("SELECT five FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                seven = cur.execute("SELECT six FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                eight = cur.execute("SELECT seven FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                nine = cur.execute("SELECT eight FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                ten = cur.execute("SELECT nine FROM history WHERE user_id = ?", (user_id,)).fetchone()
-                dropCount = cur.execute(f"SELECT {TDrop} FROM inv WHERE user_id = ?", (user_id,)).fetchone()
-                newDropCount = dropCount[0] + 1
-                cur.execute(f"UPDATE inv SET {TDrop} = ? WHERE user_id = ?", (newDropCount, user_id))
-                cur.execute("UPDATE history SET one = ? WHERE user_id = ?", (one, user_id))
-                cur.execute("UPDATE history SET two = ? WHERE user_id = ?", (two[0], user_id))
-                cur.execute("UPDATE history SET tree = ? WHERE user_id = ?", (tree[0], user_id))
-                cur.execute("UPDATE history SET four = ? WHERE user_id = ?", (four[0], user_id))
-                cur.execute("UPDATE history SET five = ? WHERE user_id = ?", (five[0], user_id))
-                cur.execute("UPDATE history SET six = ? WHERE user_id = ?", (six[0], user_id))
-                cur.execute("UPDATE history SET seven = ? WHERE user_id = ?", (seven[0], user_id))
-                cur.execute("UPDATE history SET eight = ? WHERE user_id = ?", (eight[0], user_id))
-                cur.execute("UPDATE history SET nine = ? WHERE user_id = ?", (nine[0], user_id))
-                cur.execute("UPDATE history SET ten = ? WHERE user_id = ?", (ten[0], user_id))
-                upGarant = garant[0] + 1
-                upEpic_garant = epic_garant[0] - epic_garant[0]
-                cur.execute("UPDATE gacha SET garant = ? WHERE user_id = ?", (upGarant, user_id))
-                cur.execute("UPDATE gacha SET epic_garant = ? WHERE user_id = ?", (upEpic_garant, user_id))
-                await message.answer(f"Вам вапал \"{drop}\"")
-            if rare in legendary:
-                leniv = len(legendaryDrop)
-                lenivo = leniv - 1
-                pis = random.randint(0, lenivo)
-                drop = legendaryDrop[pis]
-                TDrop = TlegendaryDrop[pis]
-                one = TDrop
                 two = cur.execute("SELECT one FROM history WHERE user_id = ?", (user_id,)).fetchone()
                 tree = cur.execute("SELECT two FROM history WHERE user_id = ?", (user_id,)).fetchone()
                 four = cur.execute("SELECT tree FROM history WHERE user_id = ?", (user_id,)).fetchone()
@@ -238,17 +274,17 @@ async def gacha(message : Message):
                 cur.execute("UPDATE history SET eight = ? WHERE user_id = ?", (eight[0], user_id))
                 cur.execute("UPDATE history SET nine = ? WHERE user_id = ?", (nine[0], user_id))
                 cur.execute("UPDATE history SET ten = ? WHERE user_id = ?", (ten[0], user_id))
-                upGarant = garant[0] - garant[0]
-                upEpic_garant = epic_garant[0] + 1
+                upGarant = garant[0] + 1
+                upEpic_garant = epic_garant[0] - epic_garant[0]
                 cur.execute("UPDATE gacha SET garant = ? WHERE user_id = ?", (upGarant, user_id))
                 cur.execute("UPDATE gacha SET epic_garant = ? WHERE user_id = ?", (upEpic_garant, user_id))
                 await message.answer(f"Вам вапал \"{drop}\"")
-        elif epic_garant[0] == 10:
-            leniv = len(epicDrop)
+        elif garant[0] == 90:
+            leniv = len(legendaryDrop)
             lenivo = leniv - 1
             pis = random.randint(0, lenivo)
-            drop = epicDrop[pis]
-            TDrop = TepicDrop[pis]
+            drop = legendaryDrop[pis]
+            TDrop = TlegendaryDrop[pis]
             one = drop
             two = cur.execute("SELECT one FROM history WHERE user_id = ?", (user_id,)).fetchone()
             tree = cur.execute("SELECT two FROM history WHERE user_id = ?", (user_id,)).fetchone()
@@ -272,45 +308,15 @@ async def gacha(message : Message):
             cur.execute("UPDATE history SET eight = ? WHERE user_id = ?", (eight[0], user_id))
             cur.execute("UPDATE history SET nine = ? WHERE user_id = ?", (nine[0], user_id))
             cur.execute("UPDATE history SET ten = ? WHERE user_id = ?", (ten[0], user_id))
-            upGarant = garant[0] + 1
-            upEpic_garant = epic_garant[0] - epic_garant[0]
+            upGarant = garant[0] - garant[0]
+            upEpic_garant = epic_garant[0] + 1
             cur.execute("UPDATE gacha SET garant = ? WHERE user_id = ?", (upGarant, user_id))
             cur.execute("UPDATE gacha SET epic_garant = ? WHERE user_id = ?", (upEpic_garant, user_id))
-            await message.answer(f"Вам вапал \"{drop}\"")
-    elif garant[0] == 90:
-        leniv = len(legendaryDrop)
-        lenivo = leniv - 1
-        pis = random.randint(0, lenivo)
-        drop = legendaryDrop[pis]
-        TDrop = TlegendaryDrop[pis]
-        one = drop
-        two = cur.execute("SELECT one FROM history WHERE user_id = ?", (user_id,)).fetchone()
-        tree = cur.execute("SELECT two FROM history WHERE user_id = ?", (user_id,)).fetchone()
-        four = cur.execute("SELECT tree FROM history WHERE user_id = ?", (user_id,)).fetchone()
-        five = cur.execute("SELECT four FROM history WHERE user_id = ?", (user_id,)).fetchone()
-        six = cur.execute("SELECT five FROM history WHERE user_id = ?", (user_id,)).fetchone()
-        seven = cur.execute("SELECT six FROM history WHERE user_id = ?", (user_id,)).fetchone()
-        eight = cur.execute("SELECT seven FROM history WHERE user_id = ?", (user_id,)).fetchone()
-        nine = cur.execute("SELECT eight FROM history WHERE user_id = ?", (user_id,)).fetchone()
-        ten = cur.execute("SELECT nine FROM history WHERE user_id = ?", (user_id,)).fetchone()
-        dropCount = cur.execute(f"SELECT {drop} FROM inv WHERE user_id = ?", (user_id,)).fetchone()
-        newDropCount = dropCount[0] + 1
-        cur.execute(f"UPDATE inv SET {TDrop} = ? WHERE user_id = ?", (newDropCount, user_id))
-        cur.execute("UPDATE history SET one = ? WHERE user_id = ?", (one, user_id))
-        cur.execute("UPDATE history SET two = ? WHERE user_id = ?", (two[0], user_id))
-        cur.execute("UPDATE history SET tree = ? WHERE user_id = ?", (tree[0], user_id))
-        cur.execute("UPDATE history SET four = ? WHERE user_id = ?", (four[0], user_id))
-        cur.execute("UPDATE history SET five = ? WHERE user_id = ?", (five[0], user_id))
-        cur.execute("UPDATE history SET six = ? WHERE user_id = ?", (six[0], user_id))
-        cur.execute("UPDATE history SET seven = ? WHERE user_id = ?", (seven[0], user_id))
-        cur.execute("UPDATE history SET eight = ? WHERE user_id = ?", (eight[0], user_id))
-        cur.execute("UPDATE history SET nine = ? WHERE user_id = ?", (nine[0], user_id))
-        cur.execute("UPDATE history SET ten = ? WHERE user_id = ?", (ten[0], user_id))
-        upGarant = garant[0] - garant[0]
-        upEpic_garant = epic_garant[0] + 1
-        cur.execute("UPDATE gacha SET garant = ? WHERE user_id = ?", (upGarant, user_id))
-        cur.execute("UPDATE gacha SET epic_garant = ? WHERE user_id = ?", (upEpic_garant, user_id))
-        await message.answer(f"Вам выпал \"{drop}\"")
+            await message.answer(f"Вам выпал \"{drop}\"")
+        newBonus = bonus - 1
+        cur.execute("UPDATE texnical SET bonus = ? WHERE user_id = ?", (newBonus, user_id))
+    else:
+        await message.answer("Сегодня вы потратили все свои крутки на сегодня")
     base.commit()
 
 @dp.message_handler(commands=["history"])
@@ -349,7 +355,7 @@ async def history(message : Message):
 async def blyatfixgovna(message : Message):
     user_id = message.from_user.id
     if user_id in admList:
-        cur.execute("UPDATE texnical SET bonus = 1")
+        cur.execute("UPDATE texnical SET bonus = 2")
         base.commit()
         print("Бонус обновлён")
     else:
